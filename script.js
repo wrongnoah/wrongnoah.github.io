@@ -1,7 +1,7 @@
 // API-Endpunkte
 const BASE_URL = window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1' 
-    ? ''  // Lokale Entwicklung
-    : '/wrongnoah.github.io';  // GitHub Pages
+    ? 'http://localhost/wrongnoah.github.io'  // Lokale Entwicklung
+    : 'https://wrongnoah.github.io';  // GitHub Pages
 
 const API_URL = {
     login: `${BASE_URL}/api/login.php`,
