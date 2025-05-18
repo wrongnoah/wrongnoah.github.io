@@ -1,264 +1,279 @@
-// Überprüfen, ob wir die Seite zum ersten Mal initialisieren
-if (!localStorage.getItem('initialized')) {
-    // Standard-Admin erstellen
-    const defaultAdmin = {
-        username: 'admin',
-        password: '123',
-        isApproved: true,
-        isAdmin: true
-    };
+// API-Endpunkte
+const API_URL = {
+    login: 'api/login.php',
+    register: 'api/register.php',
+    users: 'api/admin/users.php'
+};
 
-    // Benutzer und Registrierungsanfragen als Arrays speichern
-    localStorage.setItem('users', JSON.stringify([defaultAdmin]));
-    localStorage.setItem('pendingRequests', JSON.stringify([]));
-    localStorage.setItem('initialized', 'true');
-}
-
-// Aktuellen Benutzer beim ersten Laden auf null setzen
-if (!localStorage.getItem('currentUser')) {
-    localStorage.setItem('currentUser', '');
-}
-
-// Aktuelle Seite bestimmen
-const currentPath = window.location.pathname;
-const page = currentPath.split('/').pop();
-
-// Funktionen für die Login-Seite
-if (page === 'index.html' || page === '') {
-    // Überprüfe, ob der Benutzer bereits eingeloggt ist
-    if (localStorage.getItem('currentUser') && localStorage.getItem('currentUser') !== '') {
-        window.location.href = 'admin.html';
-    }
-
+// Event-Listener für Login-Form
+document.addEventListener('DOMContentLoaded', function() {
     const loginForm = document.getElementById('loginForm');
-    const message = document.getElementById('message');
+    if (loginForm) {
+        loginForm.addEventListener('submit', handleLogin);
+    }
+    
+    const registerForm = document.getElementById('registerForm');
+    if (registerForm) {
+        registerForm.addEventListener('submit', handleRegister);
+    }
+    
+    // Admin-Seite initialisieren, wenn wir uns auf der Admin-Seite befinden
+    const adminPanel = document.getElementById('adminPanel');
+    if (adminPanel) {
+        initAdminPanel();
+    }
+    
+    // Prüfen, ob der Benutzer angemeldet ist
+    checkAuthStatus();
+});
 
-    loginForm.addEventListener('submit', function(e) {
-        e.preventDefault();
+// Login-Handler
+async function handleLogin(event) {
+    event.preventDefault();
+    const username = document.getElementById('username').value;
+    const password = document.getElementById('password').value;
+    const messageElement = document.getElementById('message');
+    
+    try {
+        const response = await fetch(API_URL.login, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({ username, password })
+        });
         
-        const username = document.getElementById('username').value;
-        const password = document.getElementById('password').value;
+        const data = await response.json();
         
-        // Benutzer aus dem localStorage holen
-        const users = JSON.parse(localStorage.getItem('users'));
-        
-        // Benutzer suchen
-        const user = users.find(u => u.username === username && u.password === password);
-        
-        if (user) {
-            if (user.isApproved) {
-                // Benutzer einloggen
-                localStorage.setItem('currentUser', username);
+        if (response.ok) {
+            // Login erfolgreich
+            messageElement.textContent = data.message;
+            messageElement.className = 'message success';
+            
+            // User-Daten im Session Storage speichern
+            sessionStorage.setItem('currentUser', JSON.stringify(data.user));
+            
+            // Weiterleitung zur entsprechenden Seite
+            if (data.user.role === 'admin') {
                 window.location.href = 'admin.html';
             } else {
-                message.textContent = 'Dein Konto wurde noch nicht freigegeben.';
-                message.className = 'message error';
+                // Hier könnte eine User-Seite sein
+                window.location.href = 'index.html';
             }
         } else {
-            message.textContent = 'Ungültiger Benutzername oder Passwort.';
-            message.className = 'message error';
+            // Login fehlgeschlagen
+            messageElement.textContent = data.error;
+            messageElement.className = 'message error';
         }
-    });
+    } catch (error) {
+        console.error('Login-Fehler:', error);
+        messageElement.textContent = 'Ein Fehler ist aufgetreten. Bitte versuche es später erneut.';
+        messageElement.className = 'message error';
+    }
 }
 
-// Funktionen für die Registrierungsseite
-if (page === 'register.html') {
-    const registerForm = document.getElementById('registerForm');
-    const message = document.getElementById('message');
+// Registrierung-Handler
+async function handleRegister(event) {
+    event.preventDefault();
+    const username = document.getElementById('username').value;
+    const password = document.getElementById('password').value;
+    const email = document.getElementById('email').value;
+    const messageElement = document.getElementById('message');
     
-    registerForm.addEventListener('submit', function(e) {
-        e.preventDefault();
+    try {
+        const response = await fetch(API_URL.register, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({ username, password, email })
+        });
         
-        const username = document.getElementById('newUsername').value;
-        const password = document.getElementById('newPassword').value;
-        const confirmPassword = document.getElementById('confirmPassword').value;
+        const data = await response.json();
         
-        // Überprüfen, ob die Passwörter übereinstimmen
-        if (password !== confirmPassword) {
-            message.textContent = 'Die Passwörter stimmen nicht überein.';
-            message.className = 'message error';
-            return;
+        if (response.ok) {
+            // Registrierung erfolgreich
+            messageElement.textContent = data.message;
+            messageElement.className = 'message success';
+            
+            // Nach 3 Sekunden zur Login-Seite weiterleiten
+            setTimeout(() => {
+                window.location.href = 'index.html';
+            }, 3000);
+        } else {
+            // Registrierung fehlgeschlagen
+            messageElement.textContent = data.error;
+            messageElement.className = 'message error';
         }
-        
-        // Benutzer und Anfragen aus dem localStorage holen
-        const users = JSON.parse(localStorage.getItem('users'));
-        let pendingRequests = JSON.parse(localStorage.getItem('pendingRequests'));
-        
-        // Überprüfen, ob der Benutzername bereits vergeben ist
-        if (users.some(u => u.username === username) || 
-            pendingRequests.some(r => r.username === username)) {
-            message.textContent = 'Dieser Benutzername ist bereits vergeben.';
-            message.className = 'message error';
-            return;
-        }
-        
-        // Neue Registrierungsanfrage erstellen
-        const newRequest = {
-            username: username,
-            password: password,
-            isApproved: false,
-            isAdmin: false
-        };
-        
-        // Anfrage zum Array hinzufügen und speichern
-        pendingRequests.push(newRequest);
-        localStorage.setItem('pendingRequests', JSON.stringify(pendingRequests));
-        
-        message.textContent = 'Registrierung erfolgreich! Warte auf Freigabe durch einen Administrator.';
-        message.className = 'message success';
-        
-        // Formular zurücksetzen
-        registerForm.reset();
-    });
+    } catch (error) {
+        console.error('Registrierungs-Fehler:', error);
+        messageElement.textContent = 'Ein Fehler ist aufgetreten. Bitte versuche es später erneut.';
+        messageElement.className = 'message error';
+    }
 }
 
-// Funktionen für die Admin-Seite
-if (page === 'admin.html') {
-    // Überprüfen, ob der Benutzer eingeloggt ist
-    const currentUser = localStorage.getItem('currentUser');
-    if (!currentUser || currentUser === '') {
+// Admin-Panel initialisieren
+async function initAdminPanel() {
+    const currentUser = JSON.parse(sessionStorage.getItem('currentUser'));
+    
+    // Prüfen ob Benutzer angemeldet ist und Admin-Rechte hat
+    if (!currentUser || currentUser.role !== 'admin') {
         window.location.href = 'index.html';
+        return;
     }
     
-    // Aktuellen Benutzernamen anzeigen
-    document.getElementById('currentUser').textContent = currentUser;
+    // Admin-Name anzeigen
+    const adminNameElement = document.getElementById('adminName');
+    if (adminNameElement) {
+        adminNameElement.textContent = currentUser.username;
+    }
     
-    // Abmelden-Funktion
-    document.getElementById('logoutBtn').addEventListener('click', function() {
-        localStorage.setItem('currentUser', '');
-        window.location.href = 'index.html';
-    });
+    // Benutzer laden
+    loadUsers();
+}
+
+// Benutzer laden
+async function loadUsers() {
+    const pendingUsersTable = document.getElementById('pendingUsers');
+    const approvedUsersTable = document.getElementById('approvedUsers');
     
-    // Funktion zum Laden und Anzeigen der ausstehenden Registrierungen
-    function loadPendingRegistrations() {
-        const pendingRegistrations = document.getElementById('pendingRegistrations');
-        const noPendingMsg = document.getElementById('noPendingMsg');
-        const pendingRequests = JSON.parse(localStorage.getItem('pendingRequests'));
+    try {
+        const response = await fetch(API_URL.users, {
+            method: 'GET',
+            headers: {
+                'Content-Type': 'application/json'
+            }
+        });
         
-        // Container leeren
-        while (pendingRegistrations.firstChild) {
-            if (pendingRegistrations.firstChild === noPendingMsg) break;
-            pendingRegistrations.removeChild(pendingRegistrations.firstChild);
-        }
+        const users = await response.json();
         
-        // Meldung anzeigen, wenn keine Anfragen vorhanden sind
-        if (pendingRequests.length === 0) {
-            noPendingMsg.style.display = 'block';
-            return;
-        } else {
-            noPendingMsg.style.display = 'none';
-        }
-        
-        // Anfragen anzeigen
-        pendingRequests.forEach(request => {
-            const requestItem = document.createElement('div');
-            requestItem.className = 'request-item';
+        if (response.ok) {
+            // Tabellen leeren
+            pendingUsersTable.querySelector('tbody').innerHTML = '';
+            approvedUsersTable.querySelector('tbody').innerHTML = '';
             
-            const userInfo = document.createElement('div');
-            userInfo.textContent = request.username;
-            
-            const actions = document.createElement('div');
-            actions.className = 'request-actions';
-            
-            const approveBtn = document.createElement('button');
-            approveBtn.className = 'btn btn-success';
-            approveBtn.textContent = 'Zulassen';
-            approveBtn.addEventListener('click', function() {
-                approveUser(request.username);
+            // Benutzer nach Status filtern und anzeigen
+            users.forEach(user => {
+                if (user.status === 'pending') {
+                    appendUserToTable(user, pendingUsersTable);
+                } else if (user.status === 'approved') {
+                    appendUserToTable(user, approvedUsersTable);
+                }
             });
-            
-            const rejectBtn = document.createElement('button');
-            rejectBtn.className = 'btn btn-danger';
-            rejectBtn.textContent = 'Ablehnen';
-            rejectBtn.addEventListener('click', function() {
-                rejectUser(request.username);
-            });
-            
-            actions.appendChild(approveBtn);
-            actions.appendChild(rejectBtn);
-            requestItem.appendChild(userInfo);
-            requestItem.appendChild(actions);
-            
-            pendingRegistrations.insertBefore(requestItem, noPendingMsg);
+        }
+    } catch (error) {
+        console.error('Fehler beim Laden der Benutzer:', error);
+    }
+}
+
+// Benutzer zur Tabelle hinzufügen
+function appendUserToTable(user, table) {
+    const tbody = table.querySelector('tbody');
+    const row = document.createElement('tr');
+    
+    // Zeile mit Benutzerdaten füllen
+    row.innerHTML = `
+        <td>${user.username}</td>
+        <td>${user.email}</td>
+        <td>${formatDate(user.created_at)}</td>
+        <td class="actions">
+            ${user.status === 'pending' ? 
+                `<button class="btn approve" data-id="${user.id}">Genehmigen</button>
+                 <button class="btn reject" data-id="${user.id}">Ablehnen</button>` :
+                `<span class="status ${user.status}">${user.status === 'approved' ? 'Genehmigt' : 'Abgelehnt'}</span>`
+            }
+        </td>
+    `;
+    
+    // Event-Listener für die Buttons hinzufügen
+    if (user.status === 'pending') {
+        row.querySelector('.approve').addEventListener('click', () => {
+            updateUserStatus(user.id, 'approved');
+        });
+        
+        row.querySelector('.reject').addEventListener('click', () => {
+            updateUserStatus(user.id, 'rejected');
         });
     }
     
-    // Funktion zum Anzeigen zugelassener Benutzer
-    function loadApprovedUsers() {
-        const approvedUsers = document.getElementById('approvedUsers');
-        const noUsersMsg = document.getElementById('noUsersMsg');
-        const users = JSON.parse(localStorage.getItem('users'));
-        const currentUser = localStorage.getItem('currentUser');
+    tbody.appendChild(row);
+}
+
+// Benutzerstatus aktualisieren
+async function updateUserStatus(userId, status) {
+    try {
+        const response = await fetch(API_URL.users, {
+            method: 'PUT',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({ id: userId, status })
+        });
         
-        // Container leeren
-        while (approvedUsers.firstChild) {
-            if (approvedUsers.firstChild === noUsersMsg) break;
-            approvedUsers.removeChild(approvedUsers.firstChild);
-        }
+        const data = await response.json();
         
-        // Alle Benutzer außer dem aktuellen anzeigen
-        const otherUsers = users.filter(user => user.username !== currentUser);
-        
-        if (otherUsers.length === 0) {
-            noUsersMsg.style.display = 'block';
+        if (response.ok) {
+            // Status erfolgreich geändert, Benutzerliste neu laden
+            loadUsers();
         } else {
-            noUsersMsg.style.display = 'none';
-            
-            otherUsers.forEach(user => {
-                const userItem = document.createElement('div');
-                userItem.className = 'user-item';
-                userItem.textContent = user.username + (user.isAdmin ? ' (Admin)' : '');
-                approvedUsers.insertBefore(userItem, noUsersMsg);
-            });
+            console.error('Fehler beim Aktualisieren des Benutzerstatus:', data.error);
+        }
+    } catch (error) {
+        console.error('Fehler beim Aktualisieren des Benutzerstatus:', error);
+    }
+}
+
+// Datum formatieren
+function formatDate(dateString) {
+    const date = new Date(dateString);
+    return date.toLocaleDateString('de-DE', {
+        day: '2-digit',
+        month: '2-digit',
+        year: 'numeric',
+        hour: '2-digit',
+        minute: '2-digit'
+    });
+}
+
+// Prüfen, ob der Benutzer angemeldet ist
+function checkAuthStatus() {
+    const currentUser = sessionStorage.getItem('currentUser');
+    const isLoginPage = window.location.pathname.endsWith('index.html') || 
+                        window.location.pathname === '/' || 
+                        window.location.pathname === '';
+    const isRegisterPage = window.location.pathname.endsWith('register.html');
+    
+    if (!currentUser) {
+        // Nicht angemeldet, zur Login-Seite weiterleiten, wenn nicht bereits dort oder auf der Registrierungsseite
+        if (!isLoginPage && !isRegisterPage) {
+            window.location.href = 'index.html';
+        }
+    } else {
+        // Angemeldet, vom Login wegnavigieren
+        const user = JSON.parse(currentUser);
+        
+        if (isLoginPage || isRegisterPage) {
+            // Weiterleiten basierend auf der Rolle
+            if (user.role === 'admin') {
+                window.location.href = 'admin.html';
+            } else {
+                // Hier könnte man zu einer Benutzer-Seite weiterleiten
+                window.location.href = 'admin.html';
+            }
         }
     }
-    
-    // Benutzer zulassen
-    function approveUser(username) {
-        let pendingRequests = JSON.parse(localStorage.getItem('pendingRequests'));
-        let users = JSON.parse(localStorage.getItem('users'));
-        
-        const userIndex = pendingRequests.findIndex(request => request.username === username);
-        
-        if (userIndex !== -1) {
-            const user = pendingRequests[userIndex];
-            user.isApproved = true;
-            
-            // Benutzer zu zugelassenen Benutzern hinzufügen
-            users.push(user);
-            
-            // Anfrage entfernen
-            pendingRequests.splice(userIndex, 1);
-            
-            // Änderungen speichern
-            localStorage.setItem('pendingRequests', JSON.stringify(pendingRequests));
-            localStorage.setItem('users', JSON.stringify(users));
-            
-            // Listen aktualisieren
-            loadPendingRegistrations();
-            loadApprovedUsers();
-        }
+}
+
+// Abmelden
+function logout() {
+    sessionStorage.removeItem('currentUser');
+    window.location.href = 'index.html';
+}
+
+// Event-Listener für Logout-Button
+document.addEventListener('DOMContentLoaded', function() {
+    const logoutBtn = document.getElementById('logoutBtn');
+    if (logoutBtn) {
+        logoutBtn.addEventListener('click', logout);
     }
-    
-    // Anfrage ablehnen
-    function rejectUser(username) {
-        let pendingRequests = JSON.parse(localStorage.getItem('pendingRequests'));
-        
-        const userIndex = pendingRequests.findIndex(request => request.username === username);
-        
-        if (userIndex !== -1) {
-            // Anfrage entfernen
-            pendingRequests.splice(userIndex, 1);
-            
-            // Änderungen speichern
-            localStorage.setItem('pendingRequests', JSON.stringify(pendingRequests));
-            
-            // Liste aktualisieren
-            loadPendingRegistrations();
-        }
-    }
-    
-    // Laden der Daten beim Seitenstart
-    loadPendingRegistrations();
-    loadApprovedUsers();
-} 
+}); 

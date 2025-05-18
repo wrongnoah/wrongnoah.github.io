@@ -8,11 +8,27 @@ Eine einfache Website mit Registrierung, Anmeldung und Admin-Panel-Funktionalit�
 - **Registrierung**: Neue Benutzer können sich registrieren (erfordert Admin-Genehmigung)
 - **Admin-Panel**: Administratoren können Registrierungsanfragen genehmigen oder ablehnen
 - **Benutzer-Verwaltung**: Übersicht über alle zugelassenen Benutzer
+- **MySQL-Datenbank**: Persistente Datenspeicherung in einer MySQL-Datenbank
 
 ## Webseite aufrufen
 
 Die Webseite ist über GitHub Pages verfügbar:
 - https://wrongnoah.github.io
+
+## Datenbankeinrichtung
+
+1. Erstelle eine MySQL-Datenbank
+2. Passe die Datenbankverbindungsdaten in `config.php` an:
+   ```php
+   $db_host = "localhost"; // Datenbankserver
+   $db_user = "root";      // Datenbankbenutzer 
+   $db_pass = "";          // Datenbankpasswort
+   $db_name = "admin_panel"; // Datenbankname
+   ```
+3. Führe das Setup-Skript aus, um die Datenbankstruktur zu erstellen:
+   ```
+   php db_setup.php
+   ```
 
 ## Erste Schritte
 
@@ -23,7 +39,7 @@ Die Webseite ist über GitHub Pages verfügbar:
 
 ## Für Entwickler
 
-Die Website speichert alle Daten im localStorage des Browsers. Keine Datenbank erforderlich.
+Die Website verwendet PHP als Backend und MySQL für die Datenspeicherung.
 
 ### Dateien
 
@@ -31,14 +47,21 @@ Die Website speichert alle Daten im localStorage des Browsers. Keine Datenbank e
 - `register.html` - Registrierungsseite
 - `admin.html` - Admin-Panel
 - `styles.css` - Design der Website
-- `script.js` - Funktionalität der Website
+- `script.js` - Frontend-Funktionalität
+- `config.php` - Datenbankverbindungskonfiguration
+- `db_setup.php` - Skript zur Datenbankeinrichtung
+- `api/login.php` - API-Endpunkt für Login
+- `api/register.php` - API-Endpunkt für Registrierung
+- `api/admin/users.php` - API-Endpunkt für Benutzerverwaltung
 
 ## GitHub Pages Einrichtung
 
 Diese Webseite ist für die Bereitstellung über GitHub Pages konfiguriert. Nach jedem Push zum main Branch wird die Webseite automatisch aktualisiert.
 
+Für die vollständige Funktionalität mit der MySQL-Datenbank wird jedoch ein PHP-fähiger Webserver benötigt.
+
 ## Hinweise
 
-- Diese Website ist ein einfaches Beispiel ohne Backend.
-- Alle Daten werden lokal im Browser gespeichert und gehen beim Löschen des Browser-Cache verloren.
-- Für eine richtige Produktivumgebung müsste ein sicheres Backend mit Datenbank implementiert werden. 
+- Die Frontend-Oberfläche kann über GitHub Pages angezeigt werden, aber die vollständige Funktionalität (mit Datenbank) erfordert einen PHP-fähigen Webserver.
+- Stelle sicher, dass die `config.php` Datei mit den richtigen Datenbankverbindungsdaten konfiguriert ist.
+- Für eine Produktivumgebung sollten zusätzliche Sicherheitsmaßnahmen implementiert werden (z.B. HTTPS, sesssion token, etc.). 
