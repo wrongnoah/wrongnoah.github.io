@@ -4,7 +4,8 @@
   "description": "Personal website with admin panel",
   "scripts": {
     "build": "mkdir -p dist && cp -r *.php *.html *.css *.js api config.php logger.php dist/",
-    "test": "echo \"No tests specified\" && exit 0"
+    "test": "echo \"No tests specified\" && exit 0",
+    "postinstall": "npm install --package-lock-only"
   },
   "repository": {
     "type": "git",
