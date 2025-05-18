@@ -1,0 +1,377 @@
+/* Generelle Styles - Neues Design */
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+    font-family: 'Poppins', 'Segoe UI', Tahoma, sans-serif;
+}
+
+body {
+    background-color: #121212;
+    color: #e0e0e0;
+    line-height: 1.6;
+    min-height: 100vh;
+    background-image: linear-gradient(45deg, #121212, #1a1a2e);
+    display: flex;
+    flex-direction: column;
+    position: relative;
+    padding-bottom: 100px; /* Platz für Footer */
+}
+
+/* Banner Styles */
+.banner {
+    width: 100%;
+    padding: 40px 0;
+    margin-bottom: 10px;
+}
+
+.banner-content {
+    max-width: 1200px;
+    margin: 0 auto;
+    text-align: center;
+    padding: 0 20px;
+}
+
+.logo {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin-bottom: 15px;
+}
+
+.logo-icon {
+    width: 60px;
+    height: 60px;
+    background: linear-gradient(135deg, #4776E6, #8E54E9);
+    border-radius: 50%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-size: 24px;
+    font-weight: 700;
+    color: white;
+    margin-right: 15px;
+    box-shadow: 0 5px 15px rgba(71, 118, 230, 0.3);
+}
+
+.logo-text {
+    font-size: 32px;
+    font-weight: 700;
+    color: #f0f0f0;
+    letter-spacing: 1px;
+}
+
+.logo-text span {
+    background: linear-gradient(90deg, #4776E6, #8E54E9);
+    -webkit-background-clip: text;
+    background-clip: text;
+    -webkit-text-fill-color: transparent;
+}
+
+.tagline {
+    font-size: 18px;
+    color: #b3b3b3;
+    margin-top: 5px;
+    letter-spacing: 1px;
+}
+
+/* Banner Image */
+.banner-image-container {
+    max-width: 800px;
+    margin: 30px auto;
+    text-align: center;
+    overflow: hidden;
+    border-radius: 10px;
+    box-shadow: 0 5px 20px rgba(0, 0, 0, 0.4);
+}
+
+.banner-image {
+    width: 100%;
+    height: auto;
+    display: block;
+}
+
+.admin-banner {
+    margin: 20px 0 30px;
+    border-radius: 8px;
+}
+
+.container {
+    max-width: 500px;
+    margin: 20px auto 50px;
+    padding: 30px;
+    background-color: #1e1e2d;
+    border-radius: 15px;
+    box-shadow: 0 8px 25px rgba(0, 0, 0, 0.3);
+    border: 1px solid #2e2e48;
+}
+
+.admin-container {
+    max-width: 1200px;
+    margin: 30px auto;
+    padding: 30px;
+    background-color: #1e1e2d;
+    border-radius: 15px;
+    box-shadow: 0 8px 25px rgba(0, 0, 0, 0.3);
+    border: 1px solid #2e2e48;
+}
+
+h1 {
+    text-align: center;
+    margin-bottom: 30px;
+    color: #f0f0f0;
+    font-weight: 600;
+    position: relative;
+    padding-bottom: 10px;
+}
+
+h1::after {
+    content: '';
+    position: absolute;
+    bottom: 0;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 60px;
+    height: 3px;
+    background: linear-gradient(90deg, #4776E6, #8E54E9);
+    border-radius: 3px;
+}
+
+/* Form Styles */
+.form-group {
+    margin-bottom: 20px;
+}
+
+label {
+    display: block;
+    margin-bottom: 8px;
+    font-weight: 500;
+    color: #b3b3b3;
+}
+
+input {
+    width: 100%;
+    padding: 12px 15px;
+    border: 1px solid #3a3a5a;
+    border-radius: 8px;
+    font-size: 16px;
+    background-color: #252540;
+    color: #e0e0e0;
+    transition: all 0.3s ease;
+}
+
+input:focus {
+    border-color: #4776E6;
+    box-shadow: 0 0 0 2px rgba(71, 118, 230, 0.2);
+    outline: none;
+}
+
+.btn {
+    display: inline-block;
+    background: linear-gradient(90deg, #4776E6, #8E54E9);
+    color: #fff;
+    border: none;
+    padding: 14px 20px;
+    cursor: pointer;
+    font-size: 16px;
+    font-weight: 500;
+    border-radius: 8px;
+    width: 100%;
+    transition: all 0.3s ease;
+    letter-spacing: 0.5px;
+}
+
+.btn:hover {
+    background: linear-gradient(90deg, #3761c7, #7d48d0);
+    transform: translateY(-2px);
+    box-shadow: 0 5px 15px rgba(71, 118, 230, 0.3);
+}
+
+.btn-danger {
+    background: linear-gradient(90deg, #FF416C, #FF4B2B);
+}
+
+.btn-danger:hover {
+    background: linear-gradient(90deg, #e03a61, #e64225);
+}
+
+.btn-success {
+    background: linear-gradient(90deg, #11998e, #38ef7d);
+}
+
+.btn-success:hover {
+    background: linear-gradient(90deg, #0f877c, #32d571);
+}
+
+/* Links */
+a {
+    color: #4776E6;
+    text-decoration: none;
+    transition: all 0.3s;
+}
+
+a:hover {
+    color: #8E54E9;
+    text-decoration: none;
+}
+
+p {
+    text-align: center;
+    margin-top: 20px;
+    color: #b3b3b3;
+}
+
+.message {
+    margin-top: 20px;
+    padding: 12px 15px;
+    border-radius: 8px;
+    text-align: center;
+    display: none;
+    font-weight: 500;
+}
+
+.error {
+    background-color: rgba(255, 82, 82, 0.15);
+    color: #ff5252;
+    border: 1px solid rgba(255, 82, 82, 0.3);
+    display: block;
+}
+
+.success {
+    background-color: rgba(56, 239, 125, 0.15);
+    color: #38ef7d;
+    border: 1px solid rgba(56, 239, 125, 0.3);
+    display: block;
+}
+
+/* Admin Panel Styles */
+.header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 30px;
+    padding-bottom: 20px;
+    border-bottom: 1px solid #2e2e48;
+}
+
+.header button {
+    width: auto;
+}
+
+.content {
+    display: grid;
+    gap: 25px;
+}
+
+.section {
+    background-color: #252540;
+    padding: 25px;
+    border-radius: 12px;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+    border: 1px solid #2e2e48;
+}
+
+.section h2 {
+    color: #e0e0e0;
+    font-size: 20px;
+    margin-bottom: 15px;
+    position: relative;
+    display: inline-block;
+}
+
+.requests-list, .users-grid {
+    margin-top: 20px;
+}
+
+.request-item, .user-item {
+    background-color: #1e1e2d;
+    padding: 18px;
+    border-radius: 8px;
+    margin-bottom: 15px;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+    border: 1px solid #2e2e48;
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.request-item:hover, .user-item:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 15px rgba(0, 0, 0, 0.15);
+}
+
+.request-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.request-actions {
+    display: flex;
+    gap: 10px;
+}
+
+.request-actions button {
+    width: auto;
+    padding: 8px 18px;
+    font-size: 14px;
+}
+
+/* Footer Styles */
+.footer {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    background-color: #15151f;
+    border-top: 1px solid #2e2e48;
+    padding: 20px 0;
+}
+
+.footer-content {
+    max-width: 1200px;
+    margin: 0 auto;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 0 30px;
+    flex-wrap: wrap;
+}
+
+.copyright {
+    color: #8E54E9;
+    margin: 0;
+    font-size: 14px;
+    text-align: left;
+}
+
+.footer-links {
+    display: flex;
+    gap: 20px;
+}
+
+.footer-links a {
+    color: #b3b3b3;
+    font-size: 14px;
+    transition: all 0.3s;
+}
+
+.footer-links a:hover {
+    color: #4776E6;
+}
+
+/* Responsive Footer */
+@media (max-width: 600px) {
+    .footer-content {
+        flex-direction: column;
+        gap: 15px;
+    }
+    
+    .footer-links {
+        width: 100%;
+        justify-content: center;
+    }
+    
+    .copyright {
+        width: 100%;
+        text-align: center;
+    }
+} 

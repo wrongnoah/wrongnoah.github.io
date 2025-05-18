@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Panel</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <div class="admin-container">
+        <div class="header">
+            <h1>Admin Panel</h1>
+            <button id="logoutBtn" class="btn btn-danger">Abmelden</button>
+        </div>
+        
+        <div class="banner-image-container admin-banner">
+            <img src="Banner_dc.gif" alt="Banner" class="banner-image">
+        </div>
+        
+        <div class="content">
+            <div class="section">
+                <h2>Willkommen, <span id="currentUser">Admin</span>!</h2>
+            </div>
+
+            <div class="section pending-requests">
+                <h2>Ausstehende Registrierungen</h2>
+                <div id="pendingRegistrations" class="requests-list">
+                    <!-- Hier werden ausstehende Registrierungen angezeigt -->
+                    <p id="noPendingMsg">Keine ausstehenden Registrierungen.</p>
+                </div>
+            </div>
+
+            <div class="section users-list">
+                <h2>Zugelassene Benutzer</h2>
+                <div id="approvedUsers" class="users-grid">
+                    <!-- Hier werden zugelassene Benutzer angezeigt -->
+                    <p id="noUsersMsg">Keine zugelassenen Benutzer außer dir.</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <footer class="footer">
+        <div class="footer-content">
+            <p class="copyright">© 2023 Admin Panel System</p>
+            <div class="footer-links">
+                <a href="#">Datenschutz</a>
+                <a href="#">Impressum</a>
+                <a href="#">Kontakt</a>
+            </div>
+        </div>
+    </footer>
+
+    <script src="script.js"></script>
+</body>
+</html> 
