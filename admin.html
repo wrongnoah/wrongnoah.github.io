@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Panel - Dashboard</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <div class="banner">
+        <div class="banner-content">
+            <div class="logo">
+                <div class="logo-icon">AP</div>
+                <h2 class="logo-text">Admin<span>Panel</span></h2>
+            </div>
+            <p class="tagline">Sicher. Einfach. Effizient.</p>
+        </div>
+    </div>
+
+    <div class="container" id="adminPanel">
+        <div class="header-actions">
+            <h1>Admin Dashboard</h1>
+            <div class="user-section">
+                <span class="welcome-text">Willkommen, <span id="adminName"></span></span>
+                <button id="logoutBtn" class="btn btn-small">Abmelden</button>
+            </div>
+        </div>
+
+        <div class="panel-section">
+            <h2>Ausstehende Registrierungen</h2>
+            <table id="pendingUsers" class="users-table">
+                <thead>
+                    <tr>
+                        <th>Benutzername</th>
+                        <th>E-Mail</th>
+                        <th>Registrierungsdatum</th>
+                        <th>Aktionen</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <!-- Wird durch JavaScript gefüllt -->
+                    <tr>
+                        <td colspan="4">Keine ausstehenden Registrierungen</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+
+        <div class="panel-section">
+            <h2>Freigegebene Benutzer</h2>
+            <table id="approvedUsers" class="users-table">
+                <thead>
+                    <tr>
+                        <th>Benutzername</th>
+                        <th>E-Mail</th>
+                        <th>Registrierungsdatum</th>
+                        <th>Status</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <!-- Wird durch JavaScript gefüllt -->
+                    <tr>
+                        <td colspan="4">Keine freigegebenen Benutzer</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+    
+    <div class="banner-image-container">
+        <img src="Banner_dc.gif" alt="Banner" class="banner-image">
+    </div>
+
+    <footer class="footer">
+        <div class="footer-content">
+            <p class="copyright">© 2023 Admin Panel System</p>
+            <div class="footer-links">
+                <a href="#">Datenschutz</a>
+                <a href="#">Impressum</a>
+                <a href="#">Kontakt</a>
+            </div>
+        </div>
+    </footer>
+
+    <script src="script.js"></script>
+</body>
+</html> 
