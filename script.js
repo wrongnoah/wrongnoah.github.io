@@ -34,8 +34,8 @@ document.addEventListener('DOMContentLoaded', function() {
 // Login-Handler
 async function handleLogin(event) {
     event.preventDefault();
-    const username = document.getElementById('username').value;
-    const password = document.getElementById('password').value;
+        const username = document.getElementById('username').value;
+        const password = document.getElementById('password').value;
     const messageElement = document.getElementById('message');
     
     try {
@@ -81,9 +81,32 @@ async function handleRegister(event) {
     event.preventDefault();
     const username = document.getElementById('username').value;
     const password = document.getElementById('password').value;
+    const confirmPassword = document.getElementById('confirmPassword').value;
     const email = document.getElementById('email').value;
     const messageElement = document.getElementById('message');
     
+    // Passwort-Komplexität prüfen
+    if (password.length < 8) {
+        messageElement.textContent = 'Das Passwort muss mindestens 8 Zeichen lang sein.';
+        messageElement.className = 'message error';
+        return;
+    }
+    
+    // Passwort-Bestätigung prüfen
+        if (password !== confirmPassword) {
+        messageElement.textContent = 'Die Passwörter stimmen nicht überein.';
+        messageElement.className = 'message error';
+            return;
+        }
+        
+    // E-Mail-Validierung
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    if (!emailRegex.test(email)) {
+        messageElement.textContent = 'Bitte gib eine gültige E-Mail-Adresse ein.';
+        messageElement.className = 'message error';
+            return;
+        }
+        
     try {
         const response = await fetch(API_URL.register, {
             method: 'POST',
@@ -259,10 +282,10 @@ function checkAuthStatus() {
         if (isLoginPage || isRegisterPage) {
             // Weiterleiten basierend auf der Rolle
             if (user.role === 'admin') {
-                window.location.href = 'admin.html';
+                window.location.href = `${BASE_URL}/admin.html`;
             } else {
                 // Hier könnte man zu einer Benutzer-Seite weiterleiten
-                window.location.href = 'admin.html';
+                window.location.href = `${BASE_URL}/admin.html`;
             }
         }
     }
@@ -271,7 +294,7 @@ function checkAuthStatus() {
 // Abmelden
 function logout() {
     sessionStorage.removeItem('currentUser');
-    window.location.href = 'index.html';
+    window.location.href = `${BASE_URL}/index.html`;
 }
 
 // Event-Listener für Logout-Button
