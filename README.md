@@ -9,9 +9,14 @@ Eine einfache Website mit Registrierung, Anmeldung und Admin-Panel-Funktionalit�
 - **Admin-Panel**: Administratoren können Registrierungsanfragen genehmigen oder ablehnen
 - **Benutzer-Verwaltung**: Übersicht über alle zugelassenen Benutzer
 
+## Webseite aufrufen
+
+Die Webseite ist über GitHub Pages verfügbar:
+- https://wrongnoah.github.io
+
 ## Erste Schritte
 
-1. Öffne die Datei `index.html` in einem Webbrowser.
+1. Besuche die Webseite unter https://wrongnoah.github.io
 2. Melde dich mit dem Standard-Admin-Konto an:
    - Benutzername: `admin`
    - Passwort: `123`
@@ -27,6 +32,10 @@ Die Website speichert alle Daten im localStorage des Browsers. Keine Datenbank e
 - `admin.html` - Admin-Panel
 - `styles.css` - Design der Website
 - `script.js` - Funktionalität der Website
+
+## GitHub Pages Einrichtung
+
+Diese Webseite ist für die Bereitstellung über GitHub Pages konfiguriert. Nach jedem Push zum main Branch wird die Webseite automatisch aktualisiert.
 
 ## Hinweise
 
