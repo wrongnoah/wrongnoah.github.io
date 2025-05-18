@@ -17,53 +17,13 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v4
 
-      - name: Setup Node.js
-        uses: actions/setup-node@v4
-        with:
-          node-version: '20'
-          cache: 'npm'
-
-      - name: Debug Node.js and npm versions
-        run: |
-          node --version
-          npm --version
-          pwd
-          ls -la
-
-      - name: Install Dependencies
-        run: |
-          npm install --package-lock-only
-          npm install
-          npm list --depth=0
-
-      - name: Debug package.json
-        run: |
-          cat package.json || echo "No package.json found"
-          ls -la
-
-      - name: Build
-        run: |
-          if [ -f "package.json" ]; then
-            npm run build
-          else
-            echo "No build step needed - static site"
-            mkdir -p dist
-            cp -r * dist/ || true
-          fi
-
-      - name: Debug build output
-        run: |
-          ls -la
-          if [ -d "dist" ]; then
-            ls -la dist/
-          fi
+      - name: Setup Pages
+        uses: actions/configure-pages@v4
 
       - name: Upload artifact
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-pages-artifact@v3
         with:
-          name: website
-          path: ${{ github.workspace }}/dist
-          retention-days: 1
+          path: '.'
 
   deploy:
     needs: build
@@ -72,19 +32,6 @@ jobs:
       url: ${{ steps.deployment.outputs.page_url }}
     runs-on: ubuntu-latest
     steps:
-      - name: Download artifact
-        uses: actions/download-artifact@v4
-        with:
-          name: website
-
-      - name: Debug downloaded files
-        run: |
-          ls -la
-          pwd
-
       - name: Deploy to GitHub Pages
         id: deployment
-        uses: JamesIves/github-pages-deploy-action@v4
-        with:
-          folder: .
-          branch: gh-pages 
+        uses: actions/deploy-pages@v4 
