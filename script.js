@@ -1,8 +1,12 @@
 // API-Endpunkte
+const BASE_URL = window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1' 
+    ? ''  // Lokale Entwicklung
+    : '/wrongnoah.github.io';  // GitHub Pages
+
 const API_URL = {
-    login: 'api/login.php',
-    register: 'api/register.php',
-    users: 'api/admin/users.php'
+    login: `${BASE_URL}/api/login.php`,
+    register: `${BASE_URL}/api/register.php`,
+    users: `${BASE_URL}/api/admin/users.php`
 };
 
 // Event-Listener für Login-Form
@@ -55,10 +59,10 @@ async function handleLogin(event) {
             
             // Weiterleitung zur entsprechenden Seite
             if (data.user.role === 'admin') {
-                window.location.href = 'admin.html';
+                window.location.href = `${BASE_URL}/admin.html`;
             } else {
                 // Hier könnte eine User-Seite sein
-                window.location.href = 'index.html';
+                window.location.href = `${BASE_URL}/index.html`;
             }
         } else {
             // Login fehlgeschlagen
@@ -98,7 +102,7 @@ async function handleRegister(event) {
             
             // Nach 3 Sekunden zur Login-Seite weiterleiten
             setTimeout(() => {
-                window.location.href = 'index.html';
+                window.location.href = `${BASE_URL}/index.html`;
             }, 3000);
         } else {
             // Registrierung fehlgeschlagen
@@ -118,7 +122,7 @@ async function initAdminPanel() {
     
     // Prüfen ob Benutzer angemeldet ist und Admin-Rechte hat
     if (!currentUser || currentUser.role !== 'admin') {
-        window.location.href = 'index.html';
+        window.location.href = `${BASE_URL}/index.html`;
         return;
     }
     
@@ -246,7 +250,7 @@ function checkAuthStatus() {
     if (!currentUser) {
         // Nicht angemeldet, zur Login-Seite weiterleiten, wenn nicht bereits dort oder auf der Registrierungsseite
         if (!isLoginPage && !isRegisterPage) {
-            window.location.href = 'index.html';
+            window.location.href = `${BASE_URL}/index.html`;
         }
     } else {
         // Angemeldet, vom Login wegnavigieren
